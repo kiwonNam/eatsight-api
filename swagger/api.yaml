@@ -10,6 +10,7 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: 'apis.eatsight.com'
 basePath: /
+
 tags:
   - name: food
     description: food
@@ -53,21 +54,32 @@ paths:
         description: ""
         required: true
         type: string
+      security:
+        - apiKey: []
+          apiToken: []
       responses:
         200:
           description: "successful operation"
           schema:
             $ref: "#/definitions/GetFoodsResponse"
+        401:
+          description: "authorization error"
+          schema:
+            $ref: "#/definitions/GetErrorResponse"
         400:
           description: "Invalid input"
         404:
           description: "Foods not found"
 
 securityDefinitions:
-  api_key:
+  apiKey:
     type: apiKey
-    name: api_key
     in: header
+    name: DS-ApplicationKey
+  apiToken:
+    type: apiKey
+    in: header
+    name: DS-AccessToken
 definitions:
   Page:
     type: object
@@ -92,11 +104,37 @@ definitions:
         type: string
       servingAmountUnit:
         type: string
+      rate:
+        type: string
+      nutrientName:
+        type: string
+      nutrientId:
+        type: string
 
   Item:
     type: object
     properties:
       foodId:
+        type: string
+      mainNutrientServingMeasureAmount:
+        type: string
+      foodName:
+        type: string
+      vendors:
+        type: string
+      barcode:
+        type: string
+      foodType:
+        type: string
+      volume:
+        type: string
+      mainNutrientServingMeasureUnit:
+        type: string
+      registerDate:
+        type: string
+      thumbnailUrl:
+        type: string
+      volumeUnit:
         type: string
       mainNutrients:
         type: array
@@ -113,6 +151,22 @@ definitions:
         items:
           $ref: '#/definitions/Item'
 
+  GetErrorResponse:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
 
-externalDocs:
-  description: Find out more about BlueLens
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      request:
+        type: string
+      service:
+        type: string
+
+
